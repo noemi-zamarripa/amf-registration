@@ -315,6 +315,12 @@ public class RegistrationLocalServiceWrapper implements RegistrationLocalService
 	}
 
 	@Override
+	public com.liferay.portal.kernel.model.User getUser(String username)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _registrationLocalService.getUser(username);
+	}
+
+	@Override
 	public long getUserId(String username, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _registrationLocalService.getUserId(username, companyId);

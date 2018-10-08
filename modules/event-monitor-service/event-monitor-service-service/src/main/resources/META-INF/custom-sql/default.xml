@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<custom-sql>
+	<sql
+		id="com.liferay.training.amf.eventmonitor.service.service.persistence.StoreEventsFinder.findByEventType">
+        <![CDATA[
+	        SELECT *
+	        FROM lportal.eventmonitor_storeevents
+	        WHERE
+	            eventType like ?
+        ]]>
+	</sql>
+</custom-sql>

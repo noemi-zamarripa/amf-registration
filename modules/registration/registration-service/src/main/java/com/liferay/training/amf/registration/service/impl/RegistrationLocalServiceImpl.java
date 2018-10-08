@@ -140,5 +140,9 @@ public class RegistrationLocalServiceImpl extends RegistrationLocalServiceBaseIm
 		}
 		return stateId;
 	}
+	
+	public User getUser(String username) throws PortalException {
+		return userLocalService.getUserByScreenName(20115, username);
+	}
 
 }

@@ -1,15 +1,8 @@
 package com.liferay.training.amf.registration.portlet;
 
-import com.liferay.portal.kernel.portlet.ThemeDisplayModel;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.service.ContactLocalService;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.training.amf.registration.constants.RegistrationPortletKeys;
-import com.liferay.training.amf.registration.portlet.command.AddUserMVCActionCommand;
 import com.liferay.training.amf.registration.service.RegistrationLocalService;
 import com.liferay.training.amf.registration.validator.RegistrationValidator;
 
@@ -21,8 +14,6 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
-import javax.portlet.PortletMode;
-import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;

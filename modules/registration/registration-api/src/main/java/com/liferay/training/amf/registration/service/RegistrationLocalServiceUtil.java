@@ -294,6 +294,11 @@ public class RegistrationLocalServiceUtil {
 		return getService().getRegistrationsCount();
 	}
 
+	public static com.liferay.portal.kernel.model.User getUser(String username)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().getUser(username);
+	}
+
 	public static long getUserId(String username, long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getUserId(username, companyId);
