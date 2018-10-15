@@ -1,0 +1,9 @@
+Bundle-Name: search-results-api
+Bundle-SymbolicName: com.liferay.training.amf.search.results.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.training.amf.search.results.exception,\
+	com.liferay.training.amf.search.results.model,\
+	com.liferay.training.amf.search.results.service,\
+	com.liferay.training.amf.search.results.service.persistence
+-includeresource: META-INF/service.xml=../search-results-service/service.xml

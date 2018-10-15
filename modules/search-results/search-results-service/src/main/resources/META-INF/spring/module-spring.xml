@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<beans
+	default-destroy-method="destroy"
+	default-init-method="afterPropertiesSet"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+	<bean class="com.liferay.training.amf.search.results.service.impl.SearchResultsLocalServiceImpl" id="com.liferay.training.amf.search.results.service.SearchResultsLocalService" />
+	<bean class="com.liferay.training.amf.search.results.service.persistence.impl.SearchResultsPersistenceImpl" id="com.liferay.training.amf.search.results.service.persistence.SearchResultsPersistence" parent="basePersistence" />
+</beans>
