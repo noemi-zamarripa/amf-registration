@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.liferay.training.amf.newsletter.model.Newsletter">
+		<field name="uuid" type="String" />
+		<field name="newsletterId" type="long" />
+		<field name="articleId" type="String" />
+		<field name="issueNumber" type="int" />
+		<field name="issueDate" type="Date" />
+		<field name="order" type="int" />
+		<field name="isArticle" type="boolean" />
+		<field name="author" type="String" />
+		<field name="mostRecent" type="boolean" />
+		<field name="stringDate" type="String" />
+		<field name="month" type="String" />
+		<field name="year" type="int" />
+	</model>
+</model-hints>

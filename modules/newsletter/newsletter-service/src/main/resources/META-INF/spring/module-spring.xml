@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<beans
+	default-destroy-method="destroy"
+	default-init-method="afterPropertiesSet"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+	<bean class="com.liferay.training.amf.newsletter.service.impl.NewsletterLocalServiceImpl" id="com.liferay.training.amf.newsletter.service.NewsletterLocalService" />
+	<bean class="com.liferay.training.amf.newsletter.service.impl.NewsletterServiceImpl" id="com.liferay.training.amf.newsletter.service.NewsletterService" />
+	<bean class="com.liferay.training.amf.newsletter.service.persistence.impl.NewsletterPersistenceImpl" id="com.liferay.training.amf.newsletter.service.persistence.NewsletterPersistence" parent="basePersistence" />
+</beans>
