@@ -5,8 +5,6 @@ import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.training.amf.newsletter.constants.NewsletterWebPortletKeys;
 import com.liferay.training.amf.newsletter.model.Newsletter;
 import com.liferay.training.amf.newsletter.service.NewsletterLocalService;
@@ -14,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.portlet.PortletException;
+import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import org.osgi.service.component.annotations.Component;
@@ -39,19 +38,10 @@ public class ViewIssueMVCRenderCommand implements MVCRenderCommand{
 	@Override
 	public String render(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException {
 		
-		ThemeDisplay td = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		String url = td.getURLCurrent();
-		int id = -1; 
-		
-		int index = url.indexOf("e/") + 2;
-		if (url.length() != index) {
-			id = Integer.parseInt(url.substring(index, url.length()));
-		}else {
-			id = Integer.parseInt(String.valueOf(url.charAt(index)));
-		}
+		int issueNumber = (Integer) renderRequest.getPortletSession().getAttribute("sharedIssueNumber", PortletSession.APPLICATION_SCOPE);
 		
 		try {
-			List<Newsletter> issueNewsletter = _newsletterLocalService.findByIssueNumber(id);
+			List<Newsletter> issueNewsletter = _newsletterLocalService.findByIssueNumber(issueNumber);
 			Newsletter n = null;
 			
 			if (!(issueNewsletter.size() > 1)) {

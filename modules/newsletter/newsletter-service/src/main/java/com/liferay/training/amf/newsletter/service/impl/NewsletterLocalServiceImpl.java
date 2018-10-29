@@ -19,11 +19,20 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
+import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
+import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchEngineUtil;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Node;
@@ -39,6 +48,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 /**
  * The implementation of the newsletter local service.
@@ -59,6 +71,7 @@ import java.util.List;
  * @see NewsletterLocalServiceBaseImpl
  * @see com.liferay.training.amf.newsletter.service.NewsletterLocalServiceUtil
  */
+@SuppressWarnings("deprecation")
 public class NewsletterLocalServiceImpl extends NewsletterLocalServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -162,6 +175,39 @@ public class NewsletterLocalServiceImpl extends NewsletterLocalServiceBaseImpl {
 	
 	public List<Newsletter> findByIssueNumber(int issueNumber){
 		return NewsletterUtil.findByIssueNumber(issueNumber, false, true);
+	}
+	
+	public List<com.liferay.portal.kernel.search.Document> filterSearchResults(List<com.liferay.portal.kernel.search.Document> hits, SearchContext context) throws SearchException{
+		List<com.liferay.portal.kernel.search.Document> toDisplay = new ArrayList<>();
+		List<Integer> addedToDisplay = new ArrayList<>(); 
+		
+		for (com.liferay.portal.kernel.search.Document document : hits) {
+			if (document.get("ddmStructureKey").equals("31306")) {
+				int issueNumber = Integer.parseInt(document.get("ddm__keyword__31307__IssueNumber_en_US"));
+				
+				List<com.liferay.portal.kernel.search.Document> articleParent = searchForNewsletters("ddm__keyword__31303__IssueNumber_en_US", issueNumber, context);
+				
+				if (!articleParent.isEmpty()) {
+					com.liferay.portal.kernel.search.Document hit = articleParent.get(0);
+					if (toDisplay.isEmpty()) {
+						toDisplay.add(hit);
+						addedToDisplay.add(Integer.parseInt(hit.get("entryClassPK")));
+					}else {
+						for (Integer key : addedToDisplay) {
+							if (!(Integer.parseInt(hit.get("entryClassPK")) == key)) {
+								toDisplay.add(hit);
+							}
+						}
+					}
+				}
+			}else if (document.get("ddmStructureKey").equals("31302")){
+				if (!toDisplay.contains(document)) {
+					toDisplay.add(document);
+				}
+			}
+		}
+		
+		return toDisplay;
 	}
 	
 	public String getAuthor(JournalArticle ja) throws DocumentException {
@@ -410,6 +456,80 @@ public class NewsletterLocalServiceImpl extends NewsletterLocalServiceBaseImpl {
 		for (Newsletter n : news) {
 			n.setMostRecent(false);
 		}
+	}
+	
+	public List<Newsletter> matchToNewsletter(List<com.liferay.portal.kernel.search.Document> hits, int start, int end){
+		List<Newsletter> newsletters = new ArrayList<>();
+		
+		for (com.liferay.portal.kernel.search.Document document : hits) {
+			long newsletterId = parseNewsletterId(document.get("uid"));
+			
+			try {
+				newsletters.add(getNewsletter(newsletterId));
+			} catch (PortalException e) {
+				_log.error("no-matching-newsletters-found");
+			}
+		}
+		
+		if (end > hits.size()) {
+			return newsletters.subList(start, hits.size());
+		}
+		
+		return newsletters.subList(start, end);
+	}
+	
+	public long parseNewsletterId(String uid) {
+		int start = uid.indexOf("T_") + 2;
+		return Long.parseLong(uid.substring(start));
+	}
+	
+	public List<com.liferay.portal.kernel.search.Document> search(String title, String description, String content, String author, String keyword, SearchContext context) throws SearchException {
+		List<com.liferay.portal.kernel.search.Document> hits = new ArrayList<>();
+		
+		hits.addAll(searchOnField("title_en_US", keyword, context));
+		hits.addAll(searchOnField("description_en_US", keyword, context));
+		hits.addAll(searchOnField("ddm__text__31307__Content_en_US", keyword, context));
+		hits.addAll(searchOnField("ddm__keyword__31307__Author_en_US", keyword, context));
+		
+		List<com.liferay.portal.kernel.search.Document> toDisplay = filterSearchResults(hits, context);
+		
+		return toDisplay;
+	}
+	
+	public List<com.liferay.portal.kernel.search.Document> searchForNewsletters(String field, int issueNumber, SearchContext context) throws SearchException {
+		BooleanQuery searchInField = BooleanQueryFactoryUtil.create(context);
+		searchInField.addRequiredTerm(Field.ENTRY_CLASS_NAME, JournalArticle.class.getName());
+		
+		searchInField.addRequiredTerm(field, issueNumber);
+		Hits fieldHits = SearchEngineUtil.search(context, searchInField);
+		List<com.liferay.portal.kernel.search.Document> docs = fieldHits.toList();
+		
+		return docs;
+	}
+	
+	public List<com.liferay.portal.kernel.search.Document> searchOnField(String field, String keyword, SearchContext context) throws SearchException {
+		BooleanQuery searchInField = BooleanQueryFactoryUtil.create(context);
+		searchInField.addRequiredTerm(Field.ENTRY_CLASS_NAME, JournalArticle.class.getName());
+		
+		searchInField.addRequiredTerm(field, keyword);
+		searchInField.addRequiredTerm("head", true);
+		Hits fieldHits = SearchEngineUtil.search(context, searchInField);
+		List<com.liferay.portal.kernel.search.Document> docs = fieldHits.toList();
+		
+		return docs;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public SearchContainer setSearchContainer(RenderRequest renderRequest, RenderResponse renderResponse, List<com.liferay.portal.kernel.search.Document> hits) {
+		List<String> headerNames = Collections.emptyList();
+		int delta = ParamUtil.getInteger(renderRequest, SearchContainer.DEFAULT_DELTA_PARAM, 5);
+		
+		SearchContainer<Newsletter> sc = new SearchContainer<>(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, delta, renderResponse.createRenderURL(), headerNames, "no-results-found-please-try-searching-with-other-keywords");
+		List<Newsletter> newslettersToDisplay = matchToNewsletter(hits, sc.getStart(), sc.getEnd());
+		sc.setResults(newslettersToDisplay);
+		sc.setTotal(hits.size());
+		
+		return sc;
 	}
 	
 	public void updateVersion(String articleId, boolean isArticle) {

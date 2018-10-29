@@ -13,9 +13,18 @@
 	<portlet:param name="mvcRenderCommandName" value="/newsletter/issue/display"/>
 </portlet:renderURL>
 
-<portlet:actionURL var="sendIssueNumberURL" name="/newsletter/issue/display">
-	<portlet:param name="id" value="${issueNumber}"/>
+<portlet:actionURL name="/newsletter/search" var="searchForKeywordURL" >
+	<portlet:param name="keyword" value="${keywordSearch}"/>
 </portlet:actionURL>
+
+<aui:form action="${searchForKeywordURL}" method="post">
+	<aui:row>
+		<aui:col width="25">
+			<aui:input label="Keyword Search" name="keyword-search" type="text" />
+		</aui:col>
+	</aui:row>
+	<aui:button name="search" value="Search" type="submit"/>
+</aui:form><br>
 
 <liferay-ui:tabs param="currTab" names="${year}" refresh="true"
 	url="${portletURL}">
@@ -25,9 +34,12 @@
 			<c:forEach items="${news}" var="n" varStatus="status2">
 				<c:if test="${m == n.getMonth()}">
 					<br>Issue: #${n.getIssueNumber()}, ${n.getStringDate()}<br>
+					<portlet:actionURL name="/newsletter/article/issue" var="redirectToIssueURL" >
+						<portlet:param name="issueNumber" value="${n.getIssueNumber()}"/>
+					</portlet:actionURL>
 					<c:forEach items="${newsletterArticleObject}" var="article" >
 						<c:if test="${n.getNewsletterId() == article.getId()}">
-							<b><a href="localhost:8080/web/guest/newsletter/-/article-issue/${n.getIssueNumber()}">${article.getTitle(LocaleUtil.getDefault().getLanguage())}</a></b>
+							<b><a href="${redirectToIssueURL}">${article.getTitle(LocaleUtil.getDefault().getLanguage())}</a></b>
 						</c:if>
 					</c:forEach>
 					<c:set var="issueNumber" value="${n.getIssueNumber()}"></c:set>
@@ -37,7 +49,7 @@
 								<c:set var="id" value="${articles[articles1.index][articles2.index].getNewsletterId()}"></c:set>
 								<c:forEach items="${articleTitles}" var="article">
 									<c:if test="${id == article.getId()}">
-										<br><a href="localhost:8080/web/guest/newsletter/-/article-issue/${n.getIssueNumber()}">${article.getTitle(LocaleUtil.getDefault().getLanguage())}</a>
+										<br><a href="${redirectToIssueURL}">${article.getTitle(LocaleUtil.getDefault().getLanguage())}</a>
 									</c:if>
 								</c:forEach>
 							</c:if>

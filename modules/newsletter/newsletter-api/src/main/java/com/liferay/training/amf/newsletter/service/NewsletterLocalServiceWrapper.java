@@ -195,6 +195,14 @@ public class NewsletterLocalServiceWrapper implements NewsletterLocalService,
 	}
 
 	@Override
+	public java.util.List<com.liferay.portal.kernel.search.Document> filterSearchResults(
+		java.util.List<com.liferay.portal.kernel.search.Document> hits,
+		com.liferay.portal.kernel.search.SearchContext context)
+		throws com.liferay.portal.kernel.search.SearchException {
+		return _newsletterLocalService.filterSearchResults(hits, context);
+	}
+
+	@Override
 	public java.util.List<com.liferay.training.amf.newsletter.model.Newsletter> findByIssueNumber(
 		int issueNumber) {
 		return _newsletterLocalService.findByIssueNumber(issueNumber);
@@ -368,6 +376,53 @@ public class NewsletterLocalServiceWrapper implements NewsletterLocalService,
 	public void markAsPastVersion(
 		java.util.List<com.liferay.training.amf.newsletter.model.Newsletter> news) {
 		_newsletterLocalService.markAsPastVersion(news);
+	}
+
+	@Override
+	public java.util.List<com.liferay.training.amf.newsletter.model.Newsletter> matchToNewsletter(
+		java.util.List<com.liferay.portal.kernel.search.Document> hits,
+		int start, int end) {
+		return _newsletterLocalService.matchToNewsletter(hits, start, end);
+	}
+
+	@Override
+	public long parseNewsletterId(String uid) {
+		return _newsletterLocalService.parseNewsletterId(uid);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.kernel.search.Document> search(
+		String title, String description, String content, String author,
+		String keyword, com.liferay.portal.kernel.search.SearchContext context)
+		throws com.liferay.portal.kernel.search.SearchException {
+		return _newsletterLocalService.search(title, description, content,
+			author, keyword, context);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.kernel.search.Document> searchForNewsletters(
+		String field, int issueNumber,
+		com.liferay.portal.kernel.search.SearchContext context)
+		throws com.liferay.portal.kernel.search.SearchException {
+		return _newsletterLocalService.searchForNewsletters(field, issueNumber,
+			context);
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.kernel.search.Document> searchOnField(
+		String field, String keyword,
+		com.liferay.portal.kernel.search.SearchContext context)
+		throws com.liferay.portal.kernel.search.SearchException {
+		return _newsletterLocalService.searchOnField(field, keyword, context);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.dao.search.SearchContainer setSearchContainer(
+		javax.portlet.RenderRequest renderRequest,
+		javax.portlet.RenderResponse renderResponse,
+		java.util.List<com.liferay.portal.kernel.search.Document> hits) {
+		return _newsletterLocalService.setSearchContainer(renderRequest,
+			renderResponse, hits);
 	}
 
 	/**

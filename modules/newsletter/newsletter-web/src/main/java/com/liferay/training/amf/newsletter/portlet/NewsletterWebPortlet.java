@@ -7,6 +7,9 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import javax.portlet.Portlet;
 
 import org.osgi.service.component.annotations.Component;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.ProcessAction;
 
 /**
  * @author liferay
@@ -17,11 +20,11 @@ import org.osgi.service.component.annotations.Component;
 		"com.liferay.portlet.display-category=category.sample",
 		"com.liferay.portlet.instanceable=true",
 		"javax.portlet.init-param.template-path=/",
-		"javax.portlet.init-param.view-template=/view.jsp",
-		"javax.portlet.name=" + NewsletterWebPortletKeys.NEWSLETTER_PORTLET,
+		"javax.portlet.init-param.view-template=/newsletter_search.jsp",
+		"javax.portlet.name=" + NewsletterWebPortletKeys.NEWSLETTER_SEARCH_PORTLET,
 		"javax.portlet.resource-bundle=content.Language",
 		"javax.portlet.security-role-ref=power-user,user",
-		"javax.portlet.display-name=Newsletter Listing Portlet",
+		"javax.portlet.display-name=Newsletter Search Portlet",
 	},
 	service = Portlet.class
 )

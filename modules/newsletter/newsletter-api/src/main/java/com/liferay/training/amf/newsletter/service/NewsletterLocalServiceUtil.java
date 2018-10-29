@@ -189,6 +189,13 @@ public class NewsletterLocalServiceUtil {
 		return getService().fetchNewsletter(newsletterId);
 	}
 
+	public static java.util.List<com.liferay.portal.kernel.search.Document> filterSearchResults(
+		java.util.List<com.liferay.portal.kernel.search.Document> hits,
+		com.liferay.portal.kernel.search.SearchContext context)
+		throws com.liferay.portal.kernel.search.SearchException {
+		return getService().filterSearchResults(hits, context);
+	}
+
 	public static java.util.List<com.liferay.training.amf.newsletter.model.Newsletter> findByIssueNumber(
 		int issueNumber) {
 		return getService().findByIssueNumber(issueNumber);
@@ -340,6 +347,46 @@ public class NewsletterLocalServiceUtil {
 	public static void markAsPastVersion(
 		java.util.List<com.liferay.training.amf.newsletter.model.Newsletter> news) {
 		getService().markAsPastVersion(news);
+	}
+
+	public static java.util.List<com.liferay.training.amf.newsletter.model.Newsletter> matchToNewsletter(
+		java.util.List<com.liferay.portal.kernel.search.Document> hits,
+		int start, int end) {
+		return getService().matchToNewsletter(hits, start, end);
+	}
+
+	public static long parseNewsletterId(String uid) {
+		return getService().parseNewsletterId(uid);
+	}
+
+	public static java.util.List<com.liferay.portal.kernel.search.Document> search(
+		String title, String description, String content, String author,
+		String keyword, com.liferay.portal.kernel.search.SearchContext context)
+		throws com.liferay.portal.kernel.search.SearchException {
+		return getService()
+				   .search(title, description, content, author, keyword, context);
+	}
+
+	public static java.util.List<com.liferay.portal.kernel.search.Document> searchForNewsletters(
+		String field, int issueNumber,
+		com.liferay.portal.kernel.search.SearchContext context)
+		throws com.liferay.portal.kernel.search.SearchException {
+		return getService().searchForNewsletters(field, issueNumber, context);
+	}
+
+	public static java.util.List<com.liferay.portal.kernel.search.Document> searchOnField(
+		String field, String keyword,
+		com.liferay.portal.kernel.search.SearchContext context)
+		throws com.liferay.portal.kernel.search.SearchException {
+		return getService().searchOnField(field, keyword, context);
+	}
+
+	public static com.liferay.portal.kernel.dao.search.SearchContainer setSearchContainer(
+		javax.portlet.RenderRequest renderRequest,
+		javax.portlet.RenderResponse renderResponse,
+		java.util.List<com.liferay.portal.kernel.search.Document> hits) {
+		return getService()
+				   .setSearchContainer(renderRequest, renderResponse, hits);
 	}
 
 	/**

@@ -8,6 +8,7 @@ import com.liferay.training.amf.search.box.service.SearchBoxLocalService;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
+import javax.portlet.ProcessAction;
 import javax.xml.namespace.QName;
 
 import org.osgi.service.component.annotations.Component;

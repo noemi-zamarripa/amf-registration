@@ -22,17 +22,21 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
+import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.service.BaseLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
 import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 
 import com.liferay.training.amf.newsletter.model.Newsletter;
@@ -42,6 +46,9 @@ import java.io.Serializable;
 import java.sql.Date;
 
 import java.util.List;
+
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 
 /**
  * Provides the local service interface for Newsletter. Methods of this
@@ -177,6 +184,10 @@ public interface NewsletterLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Newsletter fetchNewsletter(long newsletterId);
 
+	public List<com.liferay.portal.kernel.search.Document> filterSearchResults(
+		List<com.liferay.portal.kernel.search.Document> hits,
+		SearchContext context) throws SearchException;
+
 	public List<Newsletter> findByIssueNumber(int issueNumber);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -282,6 +293,30 @@ public interface NewsletterLocalService extends BaseLocalService,
 	public List<Integer> getYearsWithIssues();
 
 	public void markAsPastVersion(List<Newsletter> news);
+
+	public List<Newsletter> matchToNewsletter(
+		List<com.liferay.portal.kernel.search.Document> hits, int start, int end);
+
+	public long parseNewsletterId(String uid);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<com.liferay.portal.kernel.search.Document> search(
+		String title, String description, String content, String author,
+		String keyword, SearchContext context) throws SearchException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<com.liferay.portal.kernel.search.Document> searchForNewsletters(
+		String field, int issueNumber, SearchContext context)
+		throws SearchException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<com.liferay.portal.kernel.search.Document> searchOnField(
+		String field, String keyword, SearchContext context)
+		throws SearchException;
+
+	public SearchContainer setSearchContainer(RenderRequest renderRequest,
+		RenderResponse renderResponse,
+		List<com.liferay.portal.kernel.search.Document> hits);
 
 	/**
 	* Updates the newsletter in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
