@@ -1,4 +1,0 @@
-Bundle-Name: event-monitor
-Bundle-SymbolicName: com.liferay.training.amf.eventmonitor
-Bundle-Version: 1.0.0
-Export-Package: com.liferay.training.amf.eventmonitor.constants

@@ -1,0 +1,9 @@
+Bundle-Name: admin-monitor-api
+Bundle-SymbolicName: com.liferay.training.admin.monitor.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.training.admin.monitor.exception,\
+	com.liferay.training.admin.monitor.model,\
+	com.liferay.training.admin.monitor.service,\
+	com.liferay.training.admin.monitor.service.persistence
+-includeresource: META-INF/service.xml=../admin-monitor-service/service.xml

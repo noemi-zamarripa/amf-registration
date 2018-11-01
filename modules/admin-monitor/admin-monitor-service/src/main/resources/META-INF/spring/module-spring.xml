@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<beans
+	default-destroy-method="destroy"
+	default-init-method="afterPropertiesSet"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
+	<bean class="com.liferay.training.admin.monitor.service.impl.StoreEventsLocalServiceImpl" id="com.liferay.training.admin.monitor.service.StoreEventsLocalService" />
+	<bean class="com.liferay.training.admin.monitor.service.impl.StoreEventsServiceImpl" id="com.liferay.training.admin.monitor.service.StoreEventsService" />
+	<bean class="com.liferay.training.admin.monitor.service.persistence.impl.StoreEventsPersistenceImpl" id="com.liferay.training.admin.monitor.service.persistence.StoreEventsPersistence" parent="basePersistence" />
+</beans>
